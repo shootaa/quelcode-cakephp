@@ -52,7 +52,28 @@ class BiditemsController extends AppController
     {
         $biditem = $this->Biditems->newEntity();
         if ($this->request->is('post')) {
-            $biditem = $this->Biditems->patchEntity($biditem, $this->request->getData());
+			$picture_data = $this->request->getData('picture');
+			$picture_name =  pathinfo($picture_data['name'], PATHINFO_FILENAME);
+			$extension = pathinfo($picture_data['name'], PATHINFO_EXTENSION);
+			$picture_path = '../webroot/img/auction/';
+			$tmp = $picture_name;
+			$i=0;
+			while(file_exists($picture_path.$tmp.'.'.$extension)){
+				$tmp = $picture_name.'_'.$i;
+				$i++;
+			}
+			$picture_name =$tmp.'.'.$extension;
+			$picture_path = '../webroot/img/auction/'.$picture_name;
+			move_uploaded_file($picture_data['tmp_name'],$picture_path);
+			$data=array(
+				'user_id'=>$this->request->getData('user_id'),
+				'name'=>$this->request->getData('name'),
+				'finished'=>$this->request->getData('description'),
+				'finished'=>$this->request->getData('finished'),
+				'endtime'=>$this->request->getData('endtime'),
+				'picture_path'=>$picture_name
+			);
+			$biditem=$this->Biditems->patchEntity($biditem,$data);
             if ($this->Biditems->save($biditem)) {
                 $this->Flash->success(__('The biditem has been saved.'));
 

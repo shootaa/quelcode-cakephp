@@ -1,5 +1,8 @@
 <h2>「<?= $biditem->name ?>」の情報</h2>
 <table class="vertical-table">
+<div id='endtime'>
+
+</div>
 <tr>
 	<th class="small" scope="row">出品者</th>
 	<td><?= $biditem->has('user') ? $biditem->user->username : '' ?></td>
@@ -13,8 +16,18 @@
 	<td><?= $this->Number->format($biditem->id) ?></td>
 </tr>
 <tr>
+	<th scope="row">商品詳細</th>
+	<td><?= h($biditem->description) ?></td>
+</tr>
+<tr>
+	<th scope="row">商品画像</th>
+	
+	<td><?= $this->Html->image('auction/'.$biditem->picture_path,array('width'=>200,'height'=>200)) ?></td>
+</tr>
+
+<tr>
 	<th scope="row">終了時間</th>
-	<td><?= h($biditem->endtime) ?></td>
+	<td id="end"><?= h($biditem->endtime) ?></td>
 </tr>
 <tr>
 	<th scope="row">投稿時間</th>
@@ -25,6 +38,7 @@
 	<td><?= $biditem->finished ? __('Yes') : __('No'); ?></td>
 </tr>
 </table>
+<?= $this->Html->script('countdown') ?>
 <div class="related">
 	<h4><?= __('落札情報') ?></h4>
 	<?php if (!empty($biditem->bidinfo)): ?>

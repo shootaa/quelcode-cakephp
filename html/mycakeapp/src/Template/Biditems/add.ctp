@@ -17,7 +17,7 @@
     </ul>
 </nav>
 <div class="biditems form large-9 medium-8 columns content">
-    <?= $this->Form->create($biditem) ?>
+    <?= $this->Form->create($biditem,['type'=>'file']) ?>
     <fieldset>
         <legend><?= __('Add Biditem') ?></legend>
         <?php
@@ -25,6 +25,8 @@
             echo $this->Form->control('name');
             echo $this->Form->control('finished');
             echo $this->Form->control('endtime');
+            echo $this->Form->control('description');
+            echo $this->Form->file('picture');
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>
