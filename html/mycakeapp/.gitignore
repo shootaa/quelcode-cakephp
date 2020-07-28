@@ -6,7 +6,7 @@
 /tmp/*
 /vendor/*
 /webroot/img/auction/*
-!/webroot/img/auction/*
+!/webroot/img/auction/.gitkeep
 
 # OS generated files #
 ######################
