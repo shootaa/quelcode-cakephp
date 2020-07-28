@@ -5,6 +5,8 @@
 /logs/*
 /tmp/*
 /vendor/*
+/webroot/img/auction/*
+!/webroot/img/auction/*
 
 # OS generated files #
 ######################
