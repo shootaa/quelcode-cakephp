@@ -74,6 +74,19 @@ class BiditemsTable extends Table
             ->notEmptyString('name');
 
         $validator
+            ->scalar('description')
+            ->requirePresence('description', 'create')
+            ->notEmptyString('description');
+
+        $validator
+            ->scalar('picture_path')
+            ->maxLength('picture_path', 255)
+            ->requirePresence('picture_path', 'create')
+            ->notEmptyString('picture_path')
+            ->add('picture_path', ['list' => [
+                'rule' => ['extension', ['jpg','jpeg','gif','png','JPG','JPEG','GIF','PNG']]]]);
+
+        $validator
             ->boolean('finished')
             ->requirePresence('finished', 'create')
             ->notEmptyString('finished');

@@ -45,6 +45,7 @@ class AuctionController extends AuctionBaseController
 		$biditem = $this->Biditems->get($id, [
 			'contain' => ['Users', 'Bidinfo', 'Bidinfo.Users']
 		]);
+		
 		// オークション終了時の処理
 		if ($biditem->endtime < new \DateTime('now') and $biditem->finished == 0) {
 			// finishedを1に変更して保存
@@ -87,8 +88,31 @@ class AuctionController extends AuctionBaseController
 		// POST送信時の処理
 		if ($this->request->is('post')) {
 			// $biditemにフォームの送信内容を反映
-			$biditem = $this->Biditems->patchEntity($biditem, $this->request->getData());
 			// $biditemを保存する
+			
+			$picture_data = $this->request->getData('picture');
+			$picture_name =  pathinfo($picture_data['name'], PATHINFO_FILENAME);
+			$extension = pathinfo($picture_data['name'], PATHINFO_EXTENSION);
+			$picture_path = '../webroot/img/auction/';
+			$tmp = $picture_name;
+			$i=0;
+			while(file_exists($picture_path.$tmp.'.'.$extension)){
+				$tmp = $picture_name.'_'.$i;
+				$i++;
+			}
+			$picture_name =$tmp.'.'.$extension;
+			$picture_path = '../webroot/img/auction/'.$picture_name;
+			move_uploaded_file($picture_data['tmp_name'],$picture_path);
+			$data=array(
+				'user_id'=>$this->request->getData('user_id'),
+				'name'=>$this->request->getData('name'),
+				'description'=>$this->request->getData('description'),
+				'picture_path'=>$picture_name,
+				'finished'=>$this->request->getData('finished'),
+				'endtime'=>$this->request->getData('endtime'),
+			);
+			$biditem=$this->Biditems->patchEntity($biditem,$data);
+
 			if ($this->Biditems->save($biditem)) {
 				// 成功時のメッセージ
 				$this->Flash->success(__('保存しました。'));

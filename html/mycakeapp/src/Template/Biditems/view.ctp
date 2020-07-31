@@ -31,9 +31,18 @@
             <td><?= h($biditem->name) ?></td>
         </tr>
         <tr>
+            <th scope="row"><?= __('description') ?></th>
+            <td><?= h($biditem->description) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('picture_path') ?></th>
+            <td><?= $this->Html->image('../webroot/img/auction/'.$biditem->picture_path,array('height'=>100,'weight'=>100)) ?></td>
+        </tr>
+        <tr>
             <th scope="row"><?= __('Id') ?></th>
             <td><?= $this->Number->format($biditem->id) ?></td>
         </tr>
+
         <tr>
             <th scope="row"><?= __('Endtime') ?></th>
             <td><?= h($biditem->endtime) ?></td>
