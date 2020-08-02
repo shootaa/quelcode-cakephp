@@ -24,7 +24,7 @@ use Cake\Validation\Validator;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class BidinfoTable extends Table
+class ReviewsTable extends Table
 {
     /**
      * Initialize method
@@ -36,23 +36,21 @@ class BidinfoTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('bidinfo');
+        $this->setTable('Reviews');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Biditems', [
-            'foreignKey' => 'biditem_id',
+        $this->belongsTo('Users', [
+            'foreignKey' => 'reviewer_id',
             'joinType' => 'INNER',
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
+            'foreignKey' => 'reviewed_id',
             'joinType' => 'INNER',
         ]);
-        $this->hasMany('Bidmessages', [
-            'foreignKey' => 'bidinfo_id',
-        ]);
+
     }
 
     /**
@@ -68,27 +66,25 @@ class BidinfoTable extends Table
             ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->integer('price')
-            ->requirePresence('price', 'create')
-            ->notEmptyString('price');
+            ->integer('reviewer_id')
+            ->requirePresence('reviewer_id', 'create')
+            ->notEmptyString('reviewer_id');
             
             $validator
-            ->scalar('name')
-            ->requirePresence('name', 'create')
-            ->maxLength('name', 255)
-            ->allowEmptyString('name', null, 'create');
+            ->integer('reviewed_id')
+            ->requirePresence('reviewed_id', 'create')
+            ->notEmptyString('reviewed_id');
             
             $validator
-            ->scalar('address')
-            ->requirePresence('address', 'create')
-            ->maxLength('address', 255)
-            ->allowEmptyString('address', null, 'create');
+            ->integer('review')
+            ->requirePresence('review', 'create')
+            ->maxLength('review', 1)
+            ->notEmptyString('review');
 
             $validator
-            ->scalar('phone')
-            ->requirePresence('phone', 'create')
-            ->maxLength('phone', 255)
-            ->allowEmptyString('phone', null, 'create');
+            ->scalar('comment')
+            ->requirePresence('comment', 'create')
+            ->allowEmptyString('comment', null, 'create');
             
             $validator
             ->boolean('is_shipped')
@@ -99,13 +95,11 @@ class BidinfoTable extends Table
             ->boolean('is_received')
             ->requirePresence('is_received', 'create')
             ->allowEmptyString('phone', null, 'create');
-            
+
             $validator
             ->dateTime('created')
             ->requirePresence('created', 'create')
             ->notEmptyDateTime('created');
-
-
 
 
 
@@ -121,8 +115,8 @@ class BidinfoTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['biditem_id'], 'Biditems'));
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['reviewer_id'], 'Users'));
+        $rules->add($rules->existsIn(['reviewed_id'], 'Users'));
 
         return $rules;
     }
