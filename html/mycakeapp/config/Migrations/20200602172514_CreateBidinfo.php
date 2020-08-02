@@ -18,14 +18,37 @@ class CreateBidinfo extends AbstractMigration
             'limit' => 11,
             'null' => false,
         ]);
+        $table->addColumn('price', 'integer', [
+            'default' => null,
+            'limit' => 11,
+            'null' => false,
+        ]);
         $table->addColumn('user_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => false,
         ]);
-        $table->addColumn('price', 'integer', [
+        $table->addColumn('name', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
+        ]);
+        $table->addColumn('address', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
+        ]);
+        $table->addColumn('phone', 'string', [
             'default' => null,
             'limit' => 11,
+            'null' => true,
+        ]);
+        $table->addColumn('is_shipped', 'boolean', [
+            'default' => 0,
+            'null' => false,
+        ]);
+        $table->addColumn('is_received', 'boolean', [
+            'default' => 0,
             'null' => false,
         ]);
         $table->addColumn('created', 'datetime', [
