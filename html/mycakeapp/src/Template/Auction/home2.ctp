@@ -18,6 +18,9 @@
 				<td class="actions">
 					<?php if (!empty($biditem->bidinfo)) : ?>
 						<?= $this->Html->link(__('View'), ['action' => 'msg', $biditem->bidinfo->id]) ?>
+						<!-- オークションが終了した場合に表示 -->
+						<?= $this->Html->link(__('Shipping'), ['action' => 'shipping', $info->id]) ?>
+
 					<?php endif; ?>
 				</td>
 			</tr>

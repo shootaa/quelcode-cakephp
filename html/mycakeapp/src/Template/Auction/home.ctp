@@ -1,3 +1,6 @@
+
+
+
 <h2><?=$authuser['username'] ?> のホーム</h2>
 <h3>※落札情報</h3>
 <table cellpadding="0" cellspacing="0">
@@ -17,6 +20,8 @@
 		<td><?= h($info->created) ?></td>
 		<td class="actions">
 			<?= $this->Html->link(__('View'), ['action' => 'msg', $info->id]) ?>
+			<?= $this->Html->link(__('Shipping'), ['action' => 'shipping',$info->id]) ?>
+
 		</td>
 	</tr>
 	<?php endforeach; ?>

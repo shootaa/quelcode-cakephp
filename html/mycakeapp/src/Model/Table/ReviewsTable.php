@@ -36,7 +36,7 @@ class ReviewsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('Reviews');
+        $this->setTable('reviews');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
@@ -86,20 +86,6 @@ class ReviewsTable extends Table
             ->requirePresence('comment', 'create')
             ->allowEmptyString('comment', null, 'create');
             
-            $validator
-            ->boolean('is_shipped')
-            ->requirePresence('is_shipped', 'create')
-            ->allowEmptyString('phone', null, 'create');
-            
-            $validator
-            ->boolean('is_received')
-            ->requirePresence('is_received', 'create')
-            ->allowEmptyString('phone', null, 'create');
-
-            $validator
-            ->dateTime('created')
-            ->requirePresence('created', 'create')
-            ->notEmptyDateTime('created');
 
 
 
