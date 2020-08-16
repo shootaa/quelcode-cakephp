@@ -197,6 +197,9 @@ class AuctionController extends AuctionBaseController
 		$this->set('bidinfo', $bidinfo);
 		$biditem = $this->Biditems->get($bidinfo['biditem_id']);
 		$this->set('biditem', $biditem);
+
+		$review = $this->Reviews->find('all')->where(['reviewed_id' => $bidinfo['user_id']])->where(['reviewed_id' => $biditem['user_id']])->toArray();
+		$this->set('review', $review);
 		// POST送信時の処理
 
 		if ($this->request->is('post')) {

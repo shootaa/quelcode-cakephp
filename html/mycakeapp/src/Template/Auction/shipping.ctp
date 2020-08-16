@@ -103,7 +103,6 @@ if ($authuser['id'] === $bidinfo['user_id'] && !$bidinfo['name']) {
             ]
         ]); ?>
         <fieldset>
-            <legend>※商品名と終了日時を入力：</legend>
             <?php
             echo $this->Form->hidden('Reviews.reviewer_id', ['value' => $authuser['id']]);
             echo $this->Form->hidden('Reviews.reviewed_id', ['value' => $biditem['user_id']]);
