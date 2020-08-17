@@ -43,9 +43,9 @@ if ($authuser['id'] === $bidinfo['user_id'] && !$bidinfo['name']) {
                     'action' => 'shipping'
                 ]
             ]); ?>
-                <?php
-                echo $this->Form->hidden('Bidinfo.id');
-                echo $this->Form->hidden('Bidinfo.is_received', ['value' => 1]); ?>
+            <?php
+            echo $this->Form->hidden('Bidinfo.id');
+            echo $this->Form->hidden('Bidinfo.is_received', ['value' => 1]); ?>
             <?= $this->Form->button('受取完了'); ?>
             <?= $this->Form->end(); ?>
 
@@ -77,9 +77,9 @@ if ($authuser['id'] === $bidinfo['user_id'] && !$bidinfo['name']) {
                         'action' => 'shipping'
                     ]
                 ]); ?>
-                    <?php
-                    echo $this->Form->hidden('Bidinfo.id');
-                    echo $this->Form->hidden('Bidinfo.is_shipped', ['value' => 1]); ?>
+                <?php
+                echo $this->Form->hidden('Bidinfo.id');
+                echo $this->Form->hidden('Bidinfo.is_shipped', ['value' => 1]); ?>
                 <?= $this->Form->button('発送完了'); ?>
                 <?= $this->Form->end(); ?>
 
