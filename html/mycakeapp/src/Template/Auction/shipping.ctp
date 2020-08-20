@@ -95,14 +95,13 @@ if ($authuser['id'] === $bidinfo['user_id'] && !$bidinfo['name']) {
 <div class="related" style="width:70%">
     <?php if ($bidinfo['is_shipped'] && $bidinfo['is_received']) { ?>
         <h2>相手への評価を入力する</h2>
-        <?= $this->Form->create($review, [
-            'type' => 'post',
-            'url' => [
-                'controller' => 'Auction',
-                'action' => 'reviewadd'
-            ]
-        ]); ?>
-        <fieldset>
+        <?= $this->Form->create($bidinfo, [
+                    'type' => 'post',
+                    'url' => [
+                        'controller' => 'Auction',
+                        'action' => 'reviewadd'
+                    ]
+                ]); ?>
             <?php
             echo $this->Form->hidden('Reviews.reviewer_id', ['value' => $authuser['id']]);
             echo $this->Form->hidden('Reviews.reviewed_id', ['value' => $biditem['user_id']]);
@@ -117,8 +116,8 @@ if ($authuser['id'] === $bidinfo['user_id'] && !$bidinfo['name']) {
             <?php
             echo $this->Form->control('Reviews.comment');
             ?>
-        </fieldset>
         <?= $this->Form->button(__('Submit')) ?>
         <?= $this->Form->end() ?>
+
     <?php }; ?>
 </div>

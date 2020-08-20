@@ -191,15 +191,13 @@ class AuctionController extends AuctionBaseController
 	// 発送先のメッセージ
 	public function shipping($bidinfo_id = null)
 	{
-
 		//落札した商品の情報を取得する
 		$bidinfo = $this->Bidinfo->get($bidinfo_id);
 		$this->set('bidinfo', $bidinfo);
 		$biditem = $this->Biditems->get($bidinfo['biditem_id']);
 		$this->set('biditem', $biditem);
 
-		$review = $this->Reviews->find('all')->where(['reviewed_id' => $bidinfo['user_id']])->where(['reviewed_id' => $biditem['user_id']])->toArray();
-		$this->set('review', $review);
+
 		// POST送信時の処理
 
 		if ($this->request->is('post')) {
