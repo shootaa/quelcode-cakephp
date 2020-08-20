@@ -196,27 +196,27 @@ class AuctionController extends AuctionBaseController
 		$this->set('bidinfo', $bidinfo);
 		$biditem = $this->Biditems->get($bidinfo['biditem_id']);
 		$this->set('biditem', $biditem);
-
-
+		$review = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->first();
+		$this->set(compact('review'));
+		//落札者、出品者以外がログインしたらindexへ飛ばす
+		$login_user = $this->Auth->user();
+		if (!($login_user['id'] === $bidinfo['user_id']) | !($login_user['id'] === $biditem['user_id'])) {
+			return $this->redirect(['action' => 'index', $bidinfo_id]);
+		};
 		// POST送信時の処理
-
 		if ($this->request->is('post')) {
-
 			$data = $this->request->data['Bidinfo'];
 			$bidinfo = $this->Bidinfo->get($data['id']);
-
-
 			$this->Bidinfo->patchEntity($bidinfo, $data);
 			// Bidinfoを保存
 			if ($this->Bidinfo->save($bidinfo)) {
 				$this->Flash->success(__('保存に成功しました。'));
-				// return $this->redirect(['action' => 'reviewAdd',$bidinfo_id]);
-
 			} else {
 				$this->Flash->error(__('送信に失敗しました。もう一度入力下さい。'));
 			}
 		}
-		try { // $bidinfo_idからBidinfoを取得する
+		try {
+			// $bidinfo_idからBidinfoを取得する
 			$bidinfo = $this->Bidinfo->get($bidinfo_id, ['contain' => ['Biditems']]);
 		} catch (Exception $e) {
 			$bidinfo = null;
@@ -225,6 +225,7 @@ class AuctionController extends AuctionBaseController
 	//評価トップページ
 	public function reviewIndex()
 	{
+
 		// ページネーションでReviewsを取得
 		$reviews = $this->paginate('Reviews', [
 			'fields' => array('Users.username', 'Reviews.reviewed_id'),
@@ -239,26 +240,32 @@ class AuctionController extends AuctionBaseController
 	public function reviewView($reviewed_id = null)
 	{
 		$login_user = $this->Reviews->find()->find('all', ['contain' => ['Users']])->where(['reviewed_id' => $reviewed_id])->first();
-		$review = $this->Reviews->find()->select(['review'])->where(['reviewed_id' => $reviewed_id])->toArray();
-		$comment = $this->Reviews->find()->select(['comment'])->where(['reviewed_id' => $reviewed_id])->toArray();
-		$reviews = $this->Reviews->find();
-		$review_avg = $this->Reviews->find()->select(['review' => $reviews->func()->avg('review')])->where(['reviewed_id' => $reviewed_id])->first();
+		$reviews = $this->Reviews->find('all', ['contain' => ['Users']])->where(['reviewed_id' => $reviewed_id])->toArray();
+		$review = $this->Reviews->find('all');
+		//評価合計と評価個数を取得
+		$review_sum = $review->where(['reviewed_id' => $reviewed_id])->select(['review_sum' => $review->func()->sum('review')])->enableHydration(false)->first();
+		$review_count = $this->Reviews->find()->where(['reviewed_id' => $reviewed_id])->count();
 		$username = $this->Reviews->find('all', ['contain' => ['Users']])->where(['reviewed_id' => $this->Auth->user('id')])->toArray();
-
-		$this->set(compact('login_user', 'username', 'review', 'review_avg', 'comment'));
+		//評価の平均値として小数点以下第二位を四捨五入
+		$review_avg = round($review_sum['review_sum'] / $review_count, 1);
+		$this->set(compact('login_user', 'username', 'reviews', 'review_avg'));
 	}
 
 	//評価送信ページ
 	public function reviewAdd()
 	{
+		//POST送信時の処理
 		if ($this->request->is('post')) {
-
 			$data = $this->request->data['Reviews'];
-
+			$error = (int)$data['review'];
+			//例外値が入力された場合の処理
+			$review_number = [1, 2, 3, 4, 5];
+			if (!in_array($error, $review_number, true)) {
+				$this->Flash->error(__('1〜5の数字で入力してください。'));
+			};
 			$review = $this->Reviews->newEntity($data);
 			if ($this->Reviews->saveOrFail($review, false)) {
 				$this->Flash->success(__('保存に成功しました。'));
-				// return $this->redirect(['action' => 'shipping']);
 				return $this->redirect(['action' => 'home']);
 			} else {
 				$this->Flash->error(__('送信に失敗しました。もう一度入力下さい。'));

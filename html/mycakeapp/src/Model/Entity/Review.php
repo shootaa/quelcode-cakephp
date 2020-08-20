@@ -29,6 +29,7 @@ class Review extends Entity
      * @var array
      */
     protected $_accessible = [
+        'bidinfo_id' => true,
         'reviewer_id' => true,
         'reviewed_id' => true,
         'review' => true,

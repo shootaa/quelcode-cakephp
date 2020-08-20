@@ -1,4 +1,5 @@
 <?php
+
 use Migrations\AbstractMigration;
 
 class CreateReviews extends AbstractMigration
@@ -13,6 +14,12 @@ class CreateReviews extends AbstractMigration
     public function change()
     {
         $table = $this->table('reviews');
+        $table->addColumn('bidinfo_id', 'integer', [
+            'default' => null,
+            'limit' => 11,
+            'null' => false,
+        ]);
+
         $table->addColumn('reviewer_id', 'integer', [
             'default' => null,
             'limit' => 11,

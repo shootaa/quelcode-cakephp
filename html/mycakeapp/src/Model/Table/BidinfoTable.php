@@ -53,6 +53,10 @@ class BidinfoTable extends Table
         $this->hasMany('Bidmessages', [
             'foreignKey' => 'bidinfo_id',
         ]);
+        $this->hasMany('Reviews', [
+            'foreignKey' => 'bidinfo_id',
+        ]);
+
     }
 
     /**

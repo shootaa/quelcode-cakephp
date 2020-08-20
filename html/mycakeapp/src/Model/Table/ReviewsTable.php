@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -41,6 +42,10 @@ class ReviewsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->belongsTo('Bidinfo', [
+            'foreignKey' => 'bidinfo_id',
+            'joinType' => 'INNER',
+        ]);
 
         $this->belongsTo('Users', [
             'foreignKey' => 'reviewer_id',
@@ -50,7 +55,6 @@ class ReviewsTable extends Table
             'foreignKey' => 'reviewed_id',
             'joinType' => 'INNER',
         ]);
-
     }
 
     /**
@@ -66,26 +70,31 @@ class ReviewsTable extends Table
             ->allowEmptyString('id', null, 'create');
 
         $validator
+            ->integer('bidinfo_id')
+            ->requirePresence('bidinfo_id', 'create')
+            ->notEmptyString('bidinfo_id');
+
+        $validator
             ->integer('reviewer_id')
             ->requirePresence('reviewer_id', 'create')
             ->notEmptyString('reviewer_id');
-            
-            $validator
+
+        $validator
             ->integer('reviewed_id')
             ->requirePresence('reviewed_id', 'create')
             ->notEmptyString('reviewed_id');
-            
-            $validator
+
+        $validator
             ->integer('review')
             ->requirePresence('review', 'create')
             ->maxLength('review', 1)
             ->notEmptyString('review');
 
-            $validator
+        $validator
             ->scalar('comment')
             ->requirePresence('comment', 'create')
             ->allowEmptyString('comment', null, 'create');
-            
+
 
 
 
@@ -101,6 +110,7 @@ class ReviewsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->existsIn(['bidinfo_id'], 'Bidinfo'));
         $rules->add($rules->existsIn(['reviewer_id'], 'Users'));
         $rules->add($rules->existsIn(['reviewed_id'], 'Users'));
 

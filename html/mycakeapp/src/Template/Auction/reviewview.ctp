@@ -1,6 +1,6 @@
 <h2><?= h($login_user->user->username) ?>の評価</h2>
 
-<h2><?= h($review_avg['review']) ?></h2>
+<h2><?php echo $review_avg ?></h2>
 
 <h3>各ユーザーからの評価</h3>
 <table cellpadding="0" cellspacing="0">
@@ -15,16 +15,13 @@
     <tbody>
 
         <tr> <?php
-                foreach ($review as $review) :
-                    foreach ($username as $username) :
-                        foreach ($comment as $comment) : ?>
+                foreach ($reviews as $review) : ?>
 
-                        <td><?= h($username->user->username) ?></td>
-                        <td><?= h($review->review) ?></td>
-                        <td><?= h($comment->comment) ?></td>
+                <td><?= h($review->user->username) ?></td>
+                <td><?= h($review->review) ?></td>
+                <td><?= h($review->comment) ?></td>
         </tr>
-<?php endforeach;
-                    endforeach;
+    <?php
                 endforeach; ?>
 
     </tbody>
