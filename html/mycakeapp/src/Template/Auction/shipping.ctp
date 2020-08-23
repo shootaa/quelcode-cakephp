@@ -93,35 +93,69 @@ if ($authuser['id'] === $bidinfo['user_id'] && !$bidinfo['name']) {
 <!-- 受取完了ボタン押下後に両者入力可能になる -->
 <!-- 評価フォーム -->
 <div class="related" style="width:70%">
-    <?php if ($bidinfo['is_shipped'] && $bidinfo['is_received'] && !$review['bidinfo_id']) { ?>
-        <h2>相手への評価を入力する</h2>
-        <?= $this->Form->create($bidinfo, [
-            'type' => 'post',
-            'url' => [
-                'controller' => 'Auction',
-                'action' => 'reviewadd'
-            ]
-        ]); ?>
-        <?php
-        echo $this->Form->hidden('Reviews.bidinfo_id', ['value' => $bidinfo['id']]);
-        echo $this->Form->hidden('Reviews.reviewer_id', ['value' => $authuser['id']]);
-        echo $this->Form->hidden('Reviews.reviewed_id', ['value' => $biditem['user_id']]);
-        ?>
-        <p>相手への評価を１（低）〜５（高）で入力してください。（必須）</p>
-        <?php
-        echo $this->Form->input('Reviews.review', ['type' => 'radio', 'options' => [['value' => 1, 'text' => 1], ['value' => 2, 'text' => 2], ['value' => 3, 'text' => 3], ['value' => 4, 'text' => 4], ['value' => 5, 'text' => 5]]]);
-        ?>
-        <p>相手への評価コメントを入力してください。</p>
 
         <?php
-        echo $this->Form->control('Reviews.comment');
-        ?>
-        <?= $this->Form->button(__('Submit')) ?>
-        <?= $this->Form->end() ?>
+                // var_dump($review);
 
-    <?php }; ?>
-    <!-- 評価を一度送信している場合 -->
-    <?php if ($bidinfo['is_received'] && $review['bidinfo_id']) { ?>
-        <p>評価は送信しました。</p>
-    <?php }; ?>
+
+        // var_export($authuser['id'] === $review->reviewer_id);
+        if ($reviewer&& $bidinfo['is_received']) {
+        ?>
+            <p>評価を送信しました。</p>
+
+        <?php 
+         }elseif ($authuser['id'] === $biditem['user_id'] && $bidinfo['is_received']) { ?>
+            <h2>相手への評価を入力する</h2>
+            <?= $this->Form->create($bidinfo, [
+                'type' => 'post',
+                'url' => [
+                    'controller' => 'Auction',
+                    'action' => 'reviewadd'
+                ]
+            ]); ?>
+            <?php
+            echo $this->Form->hidden('Reviews.bidinfo_id', ['value' => $bidinfo['id']]);
+            echo $this->Form->hidden('Reviews.reviewer_id', ['value' => $biditem['user_id']]);
+            echo $this->Form->hidden('Reviews.reviewed_id', ['value' => $bidinfo['user_id']]);
+            ?>
+            <p>相手への評価を１（低）〜５（高）で入力してください。（必須）</p>
+            <?php
+            echo $this->Form->input('Reviews.review', ['type' => 'radio', 'options' => [['value' => 1, 'text' => 1], ['value' => 2, 'text' => 2], ['value' => 3, 'text' => 3], ['value' => 4, 'text' => 4], ['value' => 5, 'text' => 5]]]);
+            ?>
+            <p>相手への評価コメントを入力してください。</p>
+
+            <?php
+            echo $this->Form->control('Reviews.comment');
+            ?>
+            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->end() ?>
+        <?php  ?>
+                <?php }elseif ($authuser['id'] === $bidinfo['user_id'] && $bidinfo['is_received']) { ?>
+            <h2>相手への評価を入力する</h2>
+            <?= $this->Form->create($bidinfo, [
+                'type' => 'post',
+                'url' => [
+                    'controller' => 'Auction',
+                    'action' => 'reviewadd'
+                ]
+            ]); ?>
+            <?php
+            echo $this->Form->hidden('Reviews.bidinfo_id', ['value' => $bidinfo['id']]);
+            echo $this->Form->hidden('Reviews.reviewer_id', ['value' => $bidinfo['user_id']]);
+            echo $this->Form->hidden('Reviews.reviewed_id', ['value' => $biditem['user_id']]);
+            ?>
+            <p>相手への評価を１（低）〜５（高）で入力してください。（必須）</p>
+            <?php
+            echo $this->Form->input('Reviews.review', ['type' => 'radio', 'options' => [['value' => 1, 'text' => 1], ['value' => 2, 'text' => 2], ['value' => 3, 'text' => 3], ['value' => 4, 'text' => 4], ['value' => 5, 'text' => 5]]]);
+            ?>
+            <p>相手への評価コメントを入力してください。</p>
+
+            <?php
+            echo $this->Form->control('Reviews.comment');
+            ?>
+            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->end() ?>
+        <?php }; ?>
+        <!-- 評価を一度送信している場合 -->
+
 </div>

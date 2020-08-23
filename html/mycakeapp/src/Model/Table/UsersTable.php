@@ -52,10 +52,11 @@ class UsersTable extends Table
             'foreignKey' => 'user_id',
         ]);
         $this->hasMany('Reviews', [
-            'foreignKey' => 'reviewed_id',
-        ]);
-        $this->hasMany('Reviews', [
             'foreignKey' => 'reviewer_id',
+        ]);
+        $this->hasMany('subReviews', [
+            'className' => 'Reviews',
+            'foreignKey' => 'reviewed_id',
         ]);
 
     }

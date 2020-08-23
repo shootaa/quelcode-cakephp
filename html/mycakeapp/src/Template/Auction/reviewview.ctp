@@ -13,15 +13,19 @@
         </tr>
     </thead>
     <tbody>
-
-        <tr> <?php
+        <tr> <?php 
                 foreach ($reviews as $review) : ?>
+               <?php        
+               $i=1;
 
-                <td><?= h($review->user->username) ?></td>
+               for($i;$i<=$reviewer_count;$i++){     
+               if(h($review->reviewer_id) === h($reviewers_name[$i-1]->id)){ ?>
+                <td><?= h($reviewers_name[$i-1]->username) ?></td>
+               <?php }};?>
                 <td><?= h($review->review) ?></td>
                 <td><?= h($review->comment) ?></td>
         </tr>
-    <?php
+        <?php
                 endforeach; ?>
 
     </tbody>
