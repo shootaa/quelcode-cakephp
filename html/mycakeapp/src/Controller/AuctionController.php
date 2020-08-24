@@ -194,22 +194,22 @@ class AuctionController extends AuctionBaseController
 		$login_user = $this->Auth->user();
 
 		//落札した商品の情報を取得する
-		$bidinfo = $this->Bidinfo->get($bidinfo_id);
-		$this->set('bidinfo', $bidinfo);
-		$biditem = $this->Biditems->get($bidinfo['biditem_id']);
-		$this->set('biditem', $biditem);
-		$review = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->first();
-		$this->set(compact('review'));
-		$reviewer = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->where(['reviewer_id' => $login_user['id']])->first();
-		$this->set(compact('review'));
-		$this->set(compact('reviewer'));
+		try{
+			$bidinfo = $this->Bidinfo->get($bidinfo_id);
+			$biditem = $this->Biditems->get($bidinfo['biditem_id']);
 
-		//落札者、出品者以外がログインしたらindexへ飛ばす
-		// var_dump($biditem['user_id']);
-		// var_dump($login_user['id']);
+		}catch(Exception $e){
+			return $this->redirect(['action' => 'index', $bidinfo_id]);
+		}
+				//落札者、出品者以外がログインしたらindexへ飛ばす
 		if ($login_user['id'] !== $bidinfo['user_id'] && $login_user['id'] !== $biditem['user_id']) {
 			return $this->redirect(['action' => 'index', $bidinfo_id]);
 		};
+		$review = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->first();
+		$reviewer = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->where(['reviewer_id' => $login_user['id']])->first();
+		$this->set(compact('bidinfo','biditem','review','reviewer'));
+
+
 		// POST送信時の処理
 		if ($this->request->is('post')) {
 			$data = $this->request->data['Bidinfo'];
@@ -221,12 +221,6 @@ class AuctionController extends AuctionBaseController
 			} else {
 				$this->Flash->error(__('送信に失敗しました。もう一度入力下さい。'));
 			}
-		}
-		try {
-			// $bidinfo_idからBidinfoを取得する
-			$bidinfo = $this->Bidinfo->get($bidinfo_id, ['contain' => ['Biditems']]);
-		} catch (Exception $e) {
-			$bidinfo = null;
 		}
 	}
 	//評価トップページ
@@ -246,6 +240,7 @@ class AuctionController extends AuctionBaseController
 	//評価詳細ページ
 	public function reviewView($reviewed_id = null)
 	{
+
 		$login_user = $this->Reviews->find()->find('all', ['contain' => ['Bidinfo','Users']])->where(['reviewed_id' => $reviewed_id])->first();
 		$reviews = $this->Reviews->find('all', ['contain' => ['Users']])->where(['reviewed_id'=>$reviewed_id])->toArray();
 		$reviewer = $this->Reviews->find()->select('reviewer_id')->where(['reviewed_id'=>$reviewed_id]);
