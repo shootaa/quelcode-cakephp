@@ -194,20 +194,19 @@ class AuctionController extends AuctionBaseController
 		$login_user = $this->Auth->user();
 
 		//落札した商品の情報を取得する
-		try{
+		try {
 			$bidinfo = $this->Bidinfo->get($bidinfo_id);
 			$biditem = $this->Biditems->get($bidinfo['biditem_id']);
-
-		}catch(Exception $e){
+		} catch (Exception $e) {
 			return $this->redirect(['action' => 'index', $bidinfo_id]);
 		}
-				//落札者、出品者以外がログインしたらindexへ飛ばす
+		//落札者、出品者以外がログインしたらindexへ飛ばす
 		if ($login_user['id'] !== $bidinfo['user_id'] && $login_user['id'] !== $biditem['user_id']) {
 			return $this->redirect(['action' => 'index', $bidinfo_id]);
 		};
 		$review = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->first();
 		$reviewer = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->where(['reviewer_id' => $login_user['id']])->first();
-		$this->set(compact('bidinfo','biditem','review','reviewer'));
+		$this->set(compact('bidinfo', 'biditem', 'review', 'reviewer'));
 
 
 		// POST送信時の処理
@@ -223,6 +222,7 @@ class AuctionController extends AuctionBaseController
 			}
 		}
 	}
+	
 	//評価トップページ
 	public function reviewIndex()
 	{
@@ -237,24 +237,27 @@ class AuctionController extends AuctionBaseController
 		$this->set(compact('reviews'));
 		$this->render('/Auction/reviewindex');
 	}
+
 	//評価詳細ページ
 	public function reviewView($reviewed_id = null)
 	{
-
-		$login_user = $this->Reviews->find()->find('all', ['contain' => ['Bidinfo','Users']])->where(['reviewed_id' => $reviewed_id])->first();
-		$reviews = $this->Reviews->find('all', ['contain' => ['Users']])->where(['reviewed_id'=>$reviewed_id])->toArray();
-		$reviewer = $this->Reviews->find()->select('reviewer_id')->where(['reviewed_id'=>$reviewed_id]);
-		$reviewers_name =$this->Users->find()->where(['id in'=>$reviewer])->toArray();
-
-		$reviewer_count=count($reviewers_name);
+		$reviews = $this->Reviews->find('all', ['contain' => ['Users']])->where(['reviewed_id' => $reviewed_id])->toArray();
+		//存在しない場合遷移する
+		if (count($reviews) <= 0) {
+			return $this->redirect(['action' => 'index', $reviewed_id]);
+		}
+		$login_user = $this->Reviews->find()->find('all', ['contain' => ['Bidinfo', 'Users']])->where(['reviewed_id' => $reviewed_id])->first();
+		$reviewer = $this->Reviews->find()->select('reviewer_id')->where(['reviewed_id' => $reviewed_id]);
+		$reviewers_name = $this->Users->find()->where(['id in' => $reviewer])->toArray();
+		$reviewer_count = count($reviewers_name);
+		$username = $this->Reviews->find('all', ['contain' => ['Users']])->where(['reviewed_id' => $this->Auth->user('id')])->toArray();
 		$review = $this->Reviews->find('all');
 		//評価合計と評価個数を取得
 		$review_sum = $review->where(['reviewed_id' => $reviewed_id])->select(['review_sum' => $review->func()->sum('review')])->enableHydration(false)->first();
 		$review_count = $this->Reviews->find()->where(['reviewed_id' => $reviewed_id])->count();
-		$username = $this->Reviews->find('all', ['contain' => ['Users']])->where(['reviewed_id' => $this->Auth->user('id')])->toArray();
 		//評価の平均値として小数点以下第二位を四捨五入
 		$review_avg = round($review_sum['review_sum'] / $review_count, 1);
-		$this->set(compact('login_user', 'username', 'reviews', 'review_avg','reviewers_name','review_count','reviewer_count'));
+		$this->set(compact('reviews', 'login_user', 'reviewers_name', 'reviewer_count', 'username', 'review_avg'));
 	}
 
 	//評価送信ページ
@@ -280,9 +283,6 @@ class AuctionController extends AuctionBaseController
 		$this->set(compact('review'));
 		$this->render('/Auction/shipping');
 	}
-
-
-
 
 	// 落札情報の表示
 	public function home()
