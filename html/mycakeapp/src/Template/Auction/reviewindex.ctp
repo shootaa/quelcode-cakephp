@@ -17,7 +17,6 @@
         <?php endforeach; ?>
     </tbody>
 </table>
-
 <div class="paginator">
     <ul class="pagination">
         <?= $this->Paginator->first('<< ' . __('first')) ?>

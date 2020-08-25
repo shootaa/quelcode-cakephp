@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -56,7 +57,6 @@ class BidinfoTable extends Table
         $this->hasMany('Reviews', [
             'foreignKey' => 'bidinfo_id',
         ]);
-
     }
 
     /**
@@ -75,43 +75,39 @@ class BidinfoTable extends Table
             ->integer('price')
             ->requirePresence('price', 'create')
             ->notEmptyString('price');
-            
-            $validator
+
+        $validator
             ->scalar('name')
             ->requirePresence('name', 'create')
             ->maxLength('name', 255)
             ->allowEmptyString('name', null, 'create');
-            
-            $validator
+
+        $validator
             ->scalar('address')
             ->requirePresence('address', 'create')
             ->maxLength('address', 255)
             ->allowEmptyString('address', null, 'create');
 
-            $validator
+        $validator
             ->scalar('phone')
             ->requirePresence('phone', 'create')
             ->maxLength('phone', 255)
             ->allowEmptyString('phone', null, 'create');
-            
-            $validator
+
+        $validator
             ->boolean('is_shipped')
             ->requirePresence('is_shipped', 'create')
             ->allowEmptyString('phone', null, 'create');
-            
-            $validator
+
+        $validator
             ->boolean('is_received')
             ->requirePresence('is_received', 'create')
             ->allowEmptyString('phone', null, 'create');
-            
-            $validator
+
+        $validator
             ->dateTime('created')
             ->requirePresence('created', 'create')
             ->notEmptyDateTime('created');
-
-
-
-
 
         return $validator;
     }

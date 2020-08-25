@@ -1,6 +1,3 @@
-
-
-
 <h2><?=$authuser['username'] ?> のホーム</h2>
 <h3>※落札情報</h3>
 <table cellpadding="0" cellspacing="0">
@@ -21,13 +18,11 @@
 		<td class="actions">
 			<?= $this->Html->link(__('View'), ['action' => 'msg', $info->id]) ?>
 			<?= $this->Html->link(__('Shipping'), ['action' => 'shipping',$info->id]) ?>
-
 		</td>
 	</tr>
 	<?php endforeach; ?>
 </tbody>
 </table>
-
 <div class="paginator">
 	<ul class="pagination">
 		<?= $this->Paginator->first('<< ' . __('first')) ?>
@@ -38,4 +33,3 @@
 	</ul>
 </div>
 <h6><?= $this->Html->link(__('出品情報に移動 >>'), ['action' => 'home2']) ?></h6>
-

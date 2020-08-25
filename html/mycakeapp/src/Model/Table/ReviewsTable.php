@@ -95,9 +95,6 @@ class ReviewsTable extends Table
             ->requirePresence('comment', 'create')
             ->allowEmptyString('comment', null, 'create');
 
-
-
-
         return $validator;
     }
 

@@ -192,7 +192,6 @@ class AuctionController extends AuctionBaseController
 	public function shipping($bidinfo_id = null)
 	{
 		$login_user = $this->Auth->user();
-
 		//落札した商品の情報を取得する
 		try {
 			$bidinfo = $this->Bidinfo->get($bidinfo_id);
@@ -207,8 +206,6 @@ class AuctionController extends AuctionBaseController
 		$review = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->first();
 		$reviewer = $this->Reviews->find()->where(['bidinfo_id' => $bidinfo_id])->where(['reviewer_id' => $login_user['id']])->first();
 		$this->set(compact('bidinfo', 'biditem', 'review', 'reviewer'));
-
-
 		// POST送信時の処理
 		if ($this->request->is('post')) {
 			$data = $this->request->data['Bidinfo'];
@@ -222,11 +219,10 @@ class AuctionController extends AuctionBaseController
 			}
 		}
 	}
-	
+
 	//評価トップページ
 	public function reviewIndex()
 	{
-
 		// ページネーションでReviewsを取得
 		$reviews = $this->paginate('Reviews', [
 			'fields' => array('Users.username', 'Reviews.reviewed_id'),
