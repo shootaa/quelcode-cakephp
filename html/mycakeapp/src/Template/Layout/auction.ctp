@@ -40,6 +40,8 @@
 				<li><?= $this->Html->link(__('あなたの出品情報'), ['action' => 'home2']) ?></li>
 				<li><?= $this->Html->link(__('商品を出品する'), ['action' => 'add']) ?></li>
 				<li><?= $this->Html->link(__('商品リストを見る'), ['action' => 'index']) ?></li>
+				<li><?= $this->Html->link(__('評価'), ['action' => 'reviewIndex']) ?></li>
+
 			</ul>
 		</nav>
 	</div>
